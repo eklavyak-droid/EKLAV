@@ -15,14 +15,12 @@
             --surface: #130d24;
             --surface-2: #1b1233;
             --border: rgba(168, 85, 247, 0.25);
-
             --text: #f3f0ff;
             --muted: #a799cc;
-
             --purple: #a855f7;
             --blue: #3b82f6;
+            --red: #ff3b3b;
             --glow: 0 0 25px rgba(168, 85, 247, 0.4);
-
             --radius: 18px;
             --shadow: 0 18px 50px rgba(0,0,0,0.5);
         }
@@ -42,7 +40,6 @@
             position: relative;
         }
 
-        /* VISUAL EFFECTS (FALLING BULBS & LASER) */
         .bg-grid {
             position: fixed; inset: 0; z-index: 0;
             background-image: linear-gradient(rgba(168, 85, 247, 0.05) 1px, transparent 1px),
@@ -50,22 +47,6 @@
             background-size: 40px 40px; pointer-events: none;
         }
 
-        .falling-bulbs {
-            position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden;
-        }
-        .bulb {
-            position: absolute; top: -20px; width: 10px; height: 10px;
-            background: var(--purple); border-radius: 50%;
-            box-shadow: 0 0 12px var(--purple), 0 0 24px var(--blue);
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(100vh) scale(1.2); opacity: 0; }
-        }
-
-        /* HEADER */
         .topbar {
             position: sticky; top: 0; z-index: 100; height: 74px;
             display: flex; align-items: center; justify-content: space-between;
@@ -74,12 +55,9 @@
         }
 
         .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-        .brand-logo { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--purple); }
-        .brand-title { font-size: 1.2rem; font-weight: 800; }
-        .brand-title span { 
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .brand-logo { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--purple); object-fit: cover; }
+        .brand-title { font-size: 1.2rem; font-weight: 800; color: #fff; }
+        .brand-title span { color: var(--red); }
         .brand-subtitle { font-size: 0.75rem; color: var(--muted); }
 
         .menu-button {
@@ -88,7 +66,6 @@
             cursor: pointer; font-size: 1.25rem;
         }
 
-        /* SIDEBAR */
         .overlay { position: fixed; inset: 0; z-index: 200; display: none; background: rgba(0,0,0,0.8); }
         .overlay.active { display: block; }
 
@@ -97,6 +74,7 @@
             width: min(340px, 86%); height: 100vh; padding: 26px 20px;
             background: var(--surface); border-left: 1px solid var(--border);
             transition: right 0.3s ease;
+            overflow-y: auto;
         }
         .sidebar.active { right: 0; }
 
@@ -107,13 +85,12 @@
             display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
             margin-top: 10px; border: 1px solid transparent; border-radius: 12px;
             color: var(--muted); background: transparent; cursor: pointer; text-align: left; text-decoration: none;
+            font-size: 0.95rem;
         }
         .nav-link:hover { color: var(--text); background: var(--surface-2); border-color: var(--border); }
 
-        /* MAIN CONTAINER */
         .container { position: relative; z-index: 2; width: min(1120px, 92%); margin: auto; padding-bottom: 60px; }
 
-        /* HERO SECTION */
         .hero {
             display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 42px;
             min-height: 440px; padding: 60px 0 40px;
@@ -123,11 +100,9 @@
             border: 1px solid var(--border); border-radius: 999px; color: var(--purple);
             background: rgba(168, 85, 247, 0.1); font-size: 0.78rem; font-weight: 700;
         }
-        .hero h1 { font-size: clamp(2.2rem, 6vw, 4rem); margin: 15px 0; line-height: 1.1; }
-        .hero h1 span { 
-            background: linear-gradient(135deg, #c084fc, #60a5fa);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); margin: 15px 0; line-height: 1.1; }
+        .title-white { color: #ffffff; }
+        .title-red { color: var(--red); font-weight: 900; }
         .hero-description { color: var(--muted); font-size: 1rem; line-height: 1.6; max-width: 540px; }
 
         .hero-actions { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; }
@@ -147,14 +122,12 @@
             border-radius: 28px; background: linear-gradient(145deg, var(--surface-2), var(--surface));
             box-shadow: var(--shadow); position: relative;
         }
-        .big-logo { width: 180px; height: 180px; border-radius: 28px; border: 2px solid var(--purple); box-shadow: var(--glow); }
+        .big-logo { width: 180px; height: 180px; border-radius: 28px; border: 2px solid var(--purple); box-shadow: var(--glow); object-fit: cover; }
 
-        /* SECTION HEADINGS */
         .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 15px; margin: 50px 0 20px; }
         .section-heading h2 { font-size: 1.6rem; color: var(--purple); }
         .section-heading p { color: var(--muted); font-size: 0.88rem; }
 
-        /* DOWNLOAD SECTION */
         .download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
         .download-card {
             display: flex; align-items: center; justify-content: space-between; gap: 15px;
@@ -163,15 +136,14 @@
         }
         .download-card:hover { transform: translateY(-3px); border-color: var(--purple); box-shadow: var(--glow); }
         .download-icon {
-            width: 48px; height: 48px; display: grid; place-items: center; border-radius: 14px;
-            color: var(--purple); background: rgba(168, 85, 247, 0.1); border: 1px solid var(--border);
+            width: 48px; height: 48px; border-radius: 14px;
+            border: 1px solid var(--border); object-fit: cover;
         }
         .download-button {
             padding: 10px 14px; border: 0; border-radius: 10px; color: #fff;
             background: linear-gradient(135deg, var(--purple), var(--blue)); font-weight: 800; cursor: pointer;
         }
 
-        /* WHITE DASHBOARDS (PLANS GRID) */
         .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .plan-card {
             background: #ffffff !important;
@@ -196,12 +168,9 @@
             color: #fff; background: linear-gradient(135deg, var(--purple), var(--blue));
             font-weight: 800; cursor: pointer; transition: 0.2s ease; margin-top: auto;
         }
-        .buy-button:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* FOOTER */
         footer { padding: 30px 5%; border-top: 1px solid var(--border); color: var(--muted); text-align: center; font-size: 0.85rem; margin-top: 40px; }
 
-        /* MODALS */
         .modal {
             position: fixed; inset: 0; z-index: 300; display: none; place-items: center;
             padding: 18px; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
@@ -211,51 +180,33 @@
         .modal-content {
             width: min(420px, 100%); padding: 25px; border-radius: 22px;
             background: var(--surface); border: 1px solid var(--border); text-align: center;
-            position: relative;
+            position: relative; max-height: 90vh; overflow-y: auto;
         }
         .modal-close { position: absolute; top: 15px; right: 15px; border: 0; background: transparent; color: var(--muted); font-size: 1.4rem; cursor: pointer; }
 
         .qr-box { display: inline-block; margin: 15px 0; padding: 10px; background: white; border-radius: 12px; }
         .qr-box img { width: 160px; height: 160px; display: block; }
 
-        .utr-input {
-            width: 100%; padding: 12px; margin: 12px 0; border-radius: 10px;
-            border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none;
+        .custom-input {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px;
+            border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; text-align: left;
         }
 
-        .history-list { text-align: left; max-height: 300px; overflow-y: auto; margin-top: 15px; }
-        .history-item {
-            padding: 12px; border-radius: 10px; background: var(--surface-2);
-            border: 1px solid var(--border); margin-bottom: 10px;
-        }
-        .key-box {
-            background: #000; padding: 8px; border-radius: 6px; color: #4ade80;
-            font-family: monospace; font-size: 0.9rem; margin-top: 5px; word-break: break-all;
-        }
-        .status-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-        .status-pending { background: #eab308; color: #000; }
-        .status-approved { background: #22c55e; color: #000; }
-        .status-failed { background: #ef4444; color: #fff; }
-
-        /* TOAST */
         .toast {
             position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
-            padding: 12px 20px; border-radius: 10px; background: var(--purple);
-            color: #fff; font-weight: 700; z-index: 500; display: none;
+            padding: 12px 20px; border-radius: 10px; background: #22c55e;
+            color: #fff; font-weight: 700; z-index: 500; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
         .toast.show { display: block; }
 
-        @media (max-width: 820px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
-            .hero-description { margin: auto; }
-            .hero-actions { justify-content: center; }
-        }
+        .feedback-card { background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-bottom: 10px; text-align: left; }
+        .history-card { background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-bottom: 10px; text-align: left; }
+        .key-display { background: #000; color: #4ade80; padding: 6px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; margin-top: 5px; word-break: break-all; }
     </style>
 </head>
 <body>
 
     <div class="bg-grid"></div>
-    <div class="falling-bulbs" id="fallingBulbs"></div>
 
     <!-- HEADER -->
     <header class="topbar">
@@ -279,20 +230,22 @@
         <nav>
             <a href="#home" class="nav-link" onclick="closeSidebar()">⌂ Homepage</a>
             <a href="#plans" class="nav-link" onclick="closeSidebar()">▣ Available Plans</a>
-            <button class="nav-link" onclick="openHistory(); closeSidebar();">◷ Purchase History</button>
-            <button class="nav-link" onclick="showToast('Customer Support: Telegram @EklavSupport')">✦ Customer Support</button>
+            <button class="nav-link" onclick="openHistoryModal(); closeSidebar();">◷ Purchase History</button>
+            <button class="nav-link" onclick="openFeedbackModal(); closeSidebar();">★ Check Feedback</button>
+            <button class="nav-link" onclick="showToast('Free Panel Uploading Soon!')">🎁 Free Panel</button>
+            <button class="nav-link" onclick="openSupportModal(); closeSidebar();">🎧 Customer Support</button>
         </nav>
     </aside>
 
-    <!-- MAIN -->
+    <!-- MAIN CONTAINER -->
     <main class="container" id="home">
-        <!-- HERO -->
+        <!-- HERO SECTION -->
         <section class="hero">
             <div>
                 <div class="eyebrow">SYSTEM ONLINE</div>
-                <h1>Your Trusted <span>MODZ</span> Store</h1>
+                <h1>YOUR <span class="title-white">EKLAV</span> <span class="title-red">MODZ</span> Store</h1>
                 <p class="hero-description">
-                    Fast, secure aur reliable gaming panels. Plan choose karein, UPI payment karein aur UTR submit karke Instant key प्राप्त karein.
+                    Fast, secure aur reliable gaming panels. Plan choose karein, UPI payment karein aur UTR submit karke Instant key prapt karein.
                 </p>
                 <div class="hero-actions">
                     <a href="#plans" class="primary-button">View Key Plans →</a>
@@ -313,26 +266,28 @@
                 </div>
             </div>
             <div class="download-grid">
+                <!-- Panel APK -->
                 <div class="download-card">
-                    <div class="download-icon">⬇</div>
+                    <img src="logo.png" class="download-icon" alt="Panel Logo">
                     <div>
                         <h3>Panel APK</h3>
-                        <p style="font-size:0.8rem; color:var(--muted);">Version 1.0 · Android 10+</p>
+                        <p style="font-size:0.8rem; color:var(--muted);">All Android support</p>
                     </div>
-                    <button class="download-button" onclick="showToast('Panel APK Download Jald shuru hoga')">Download</button>
+                    <button class="download-button" onclick="showToast('Panel APK Download Soon')">Download</button>
                 </div>
+                <!-- Free Fire APK -->
                 <div class="download-card">
-                    <div class="download-icon">◈</div>
+                    <img src="logo_1.png" class="download-icon" alt="FF Logo">
                     <div>
                         <h3>FF APK</h3>
                         <p style="font-size:0.8rem; color:var(--muted);">Latest Build · Android 10+</p>
                     </div>
-                    <button class="download-button" onclick="showToast('FF APK Download Jald shuru hoga')">Download</button>
+                    <button class="download-button" onclick="showToast('FF APK Download Soon')">Download</button>
                 </div>
             </div>
         </section>
 
-        <!-- PLANS (WHITE CARDS) -->
+        <!-- PLANS -->
         <section id="plans">
             <div class="section-heading">
                 <div>
@@ -342,7 +297,6 @@
             </div>
 
             <div class="plans-grid">
-                <!-- DASHBOARD 1 -->
                 <article class="plan-card">
                     <div class="plan-number">Plan 01</div>
                     <h3>Dashboard - 1</h3>
@@ -355,7 +309,6 @@
                     <button class="buy-button" onclick="openPayment('Dashboard - 1', 110)">Buy Now</button>
                 </article>
 
-                <!-- DASHBOARD 2 -->
                 <article class="plan-card">
                     <div class="plan-number">Plan 02</div>
                     <h3>Dashboard - 2</h3>
@@ -368,7 +321,6 @@
                     <button class="buy-button" onclick="openPayment('Dashboard - 2', 250)">Buy Now</button>
                 </article>
 
-                <!-- DASHBOARD 3 -->
                 <article class="plan-card">
                     <div class="plan-number">Plan 03</div>
                     <h3>Dashboard - 3</h3>
@@ -381,7 +333,6 @@
                     <button class="buy-button" onclick="openPayment('Dashboard - 3', 330)">Buy Now</button>
                 </article>
 
-                <!-- DASHBOARD 4 -->
                 <article class="plan-card">
                     <div class="plan-number">Plan 04</div>
                     <h3>Dashboard - 4</h3>
@@ -394,7 +345,6 @@
                     <button class="buy-button" onclick="openPayment('Dashboard - 4', 450)">Buy Now</button>
                 </article>
 
-                <!-- DASHBOARD 5 -->
                 <article class="plan-card">
                     <div class="plan-number">Plan 05</div>
                     <h3>Dashboard - 5</h3>
@@ -410,171 +360,211 @@
         </section>
     </main>
 
+    <!-- BUY MODAL -->
+    <div class="modal" id="payModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('payModal')">×</button>
+            <h3 id="modalPlanName">Checkout Plan</h3>
+            <p id="modalPlanPrice" style="color:var(--purple); font-weight:bold; margin-bottom:10px;"></p>
+
+            <input type="text" id="custName" class="custom-input" placeholder="Enter Your Name">
+            <select id="custPlan" class="custom-input" disabled>
+                <option value="">Choose Plan</option>
+            </select>
+
+            <div class="qr-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=zalzalatabhi50@upi&pn=EklavModz" alt="Payment QR">
+            </div>
+
+            <a href="upi://pay?pa=zalzalatabhi50@upi&pn=EklavModz" class="primary-button" style="width:100%; margin-bottom:10px;">Direct Payment Now</a>
+
+            <input type="text" id="custUTR" class="custom-input" placeholder="Enter 12 Digit UTR Number">
+            <button class="buy-button" onclick="submitTicket()">Submit Ticket</button>
+        </div>
+    </div>
+
+    <!-- CUSTOMER SUPPORT MODAL -->
+    <div class="modal" id="supportModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('supportModal')">×</button>
+            <h3>Customer Support</h3>
+            <p style="font-size:0.8rem; color:var(--muted); margin-bottom:15px;">Send issue directly to Admin</p>
+
+            <input type="text" id="suppName" class="custom-input" placeholder="Enter Name">
+            <input type="email" id="suppGmail" class="custom-input" placeholder="Enter Your Gmail">
+            <textarea id="suppProblem" class="custom-input" style="height:80px;" placeholder="Enter Your Problem"></textarea>
+
+            <button class="buy-button" style="margin-top:10px;" onclick="sendSupport()">Send Ticket</button>
+        </div>
+    </div>
+
+    <!-- PURCHASE HISTORY MODAL -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('historyModal')">×</button>
+            <h3>Purchase History</h3>
+            <div id="historyContent" style="margin-top:15px;">Loading...</div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('feedbackModal')">×</button>
+            <h3>Customer Feedbacks</h3>
+            <div style="margin-top:15px;">
+                <div class="feedback-card">
+                    <strong>★ ★ ★ ★ ★ - Rohit S.</strong>
+                    <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">"Instant key mil gayi 2 minute me! Safe and legit system."</p>
+                </div>
+                <div class="feedback-card">
+                    <strong>★ ★ ★ ★ ★ - Aman V.</strong>
+                    <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">"Best Free Fire Panel Ever!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toastMsg"></div>
+
     <footer>
         © 2026 EKLAV MODZ. All rights reserved.
     </footer>
-    <!-- PAYMENT MODAL -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closePayment()">×</button>
-            <h2 id="planTitle" style="color: var(--purple);">Selected Plan</h2>
-            <p id="planPrice" style="color: var(--muted); margin-top:5px;"></p>
-
-            <div class="qr-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi%3A%2F%2Fpay%3Fpa%3Deklavyna%40naviaxis" alt="QR Code">
-            </div>
-
-            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:10px;">UPI ID: eklavyna@naviaxis</p>
-
-            <input type="text" id="utrInput" class="utr-input" placeholder="Enter UTR / Ref Number" maxlength="22">
-            <button class="buy-button" onclick="submitTicket()">Submit Payment Ticket</button>
-        </div>
-    </div>
-
-    <!-- HISTORY MODAL -->
-    <div class="modal" id="historyModal">
-        <div class="modal-content" style="width: min(500px, 100%);">
-            <button class="modal-close" onclick="closeHistory()">×</button>
-            <h2 style="color: var(--purple);">Purchase History</h2>
-            <div class="history-list" id="historyList">
-                <p style="text-align:center; color:var(--muted);">Loading history...</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="toast" id="toast"></div>
 
     <script>
-        // FALLING BULBS GENERATOR
-        function createBulbs() {
-            const container = document.getElementById('fallingBulbs');
-            for (let i = 0; i < 20; i++) {
-                const bulb = document.createElement('div');
-                bulb.className = 'bulb';
-                bulb.style.left = Math.random() * 100 + '%';
-                bulb.style.animationDelay = Math.random() * 8 + 's';
-                bulb.style.animationDuration = (4 + Math.random() * 6) + 's';
-                container.appendChild(bulb);
-            }
-        }
-        createBulbs();
-
-        // FIREBASE CONFIGURATION
+        // Firebase Config (Apna Database URL Dalein)
         const firebaseConfig = {
-            apiKey: "AIzaSyC0ImGHNOYIsN1GSwzUz9PtQrsDucm1u28",
-            databaseURL: "https://social-time-f4e53-default-rtdb.firebaseio.com",
-            projectId: "social-time-f4e53",
-            storageBucket: "social-time-f4e53.firebasestorage.app"
+            databaseURL: "https://your-firebase-db-default-rtdb.firebaseio.com/"
         };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        // USER ID MANAGEMENT
-        let userId = localStorage.getItem("emodz_user_id");
-        if (!userId) {
-            userId = "USER_" + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem("emodz_user_id", userId);
-        }
-
-        let currentSelectedPlan = "";
-        let currentSelectedPrice = 0;
+        let selectedPlan = "";
+        let selectedPrice = 0;
 
         function openSidebar() {
-            document.getElementById("sidebar").classList.add("active");
-            document.getElementById("overlay").classList.add("active");
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
         }
         function closeSidebar() {
-            document.getElementById("sidebar").classList.remove("active");
-            document.getElementById("overlay").classList.remove("active");
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         function openPayment(planName, price) {
-            currentSelectedPlan = planName;
-            currentSelectedPrice = price;
-            document.getElementById("planTitle").textContent = planName;
-            document.getElementById("planPrice").textContent = "Payable Amount: ₹" + price;
-            document.getElementById("utrInput").value = "";
-            document.getElementById("paymentModal").classList.add("active");
+            selectedPlan = planName;
+            selectedPrice = price;
+            document.getElementById('modalPlanName').innerText = planName;
+            document.getElementById('modalPlanPrice').innerText = '₹' + price;
+            
+            const sel = document.getElementById('custPlan');
+            sel.innerHTML = `<option value="${planName}">${planName} - ₹${price}</option>`;
+            
+            document.getElementById('payModal').classList.add('active');
         }
-        function closePayment() {
-            document.getElementById("paymentModal").classList.remove("active");
+
+        function openSupportModal() { document.getElementById('supportModal').classList.add('active'); }
+        function openFeedbackModal() { document.getElementById('feedbackModal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
         function submitTicket() {
-            const utr = document.getElementById("utrInput").value.trim();
-            if (utr.length < 6) {
-                showToast("Sahi UTR number enter karein");
+            const name = document.getElementById('custName').value.trim();
+            const utr = document.getElementById('custUTR').value.trim();
+
+            if(!name || !utr) {
+                alert("Kripya Naam aur UTR Number bharein!");
                 return;
             }
 
-            const ticketRef = db.ref("tickets").push();
-            ticketRef.set({
-                userId: userId,
-                plan: currentSelectedPlan,
-                price: currentSelectedPrice,
+            const ticketId = 'TCK' + Date.now();
+            const ticketData = {
+                id: ticketId,
+                name: name,
+                plan: selectedPlan,
+                price: selectedPrice,
                 utr: utr,
-                status: "pending",
-                key: "",
-                timestamp: Date.now()
-            }, (error) => {
-                if (error) {
-                    showToast("Submit error! Phir se try karein.");
-                } else {
-                    closePayment();
-                    showToast("Payment ticket submit ho gaya! Approval ka wait karein.");
-                }
+                status: 'pending',
+                time: new Date().toLocaleString(),
+                key: 'Processing...'
+            };
+
+            db.ref('tickets/' + ticketId).set(ticketData).then(() => {
+                let myTickets = JSON.parse(localStorage.getItem('my_tickets') || '[]');
+                myTickets.push(ticketId);
+                localStorage.setItem('my_tickets', JSON.stringify(myTickets));
+
+                closeModal('payModal');
+                showToast("Send Successfully!");
+                document.getElementById('custName').value = '';
+                document.getElementById('custUTR').value = '';
             });
         }
 
-        function openHistory() {
-            document.getElementById("historyModal").classList.add("active");
-            const historyList = document.getElementById("historyList");
+        function sendSupport() {
+            const name = document.getElementById('suppName').value.trim();
+            const gmail = document.getElementById('suppGmail').value.trim();
+            const problem = document.getElementById('suppProblem').value.trim();
 
-            db.ref("tickets").orderByChild("userId").equalTo(userId).on("value", (snapshot) => {
-                historyList.innerHTML = "";
-                if (!snapshot.exists()) {
-                    historyList.innerHTML = "<p style='text-align:center; color:var(--muted);'>Koi purchase history nahi hai.</p>";
-                    return;
-                }
+            if(!name || !gmail || !problem) {
+                alert("Sabhi Details Bharein!");
+                return;
+            }
 
-                snapshot.forEach((child) => {
-                    const item = child.val();
-                    let statusHTML = `<span class="status-badge status-pending">PENDING</span>`;
-                    let keyHTML = `<div style="color:var(--muted); font-size:0.8rem; margin-top:5px;">Approval ka wait karein...</div>`;
+            db.ref('support_tickets/').push({
+                name: name,
+                gmail: gmail,
+                problem: problem,
+                time: new Date().toLocaleString()
+            });
 
-                    if (item.status === "approved") {
-                        statusHTML = `<span class="status-badge status-approved">APPROVED</span>`;
-                        keyHTML = `<div class="key-box">Key: ${item.key}</div>`;
-                    } else if (item.status === "failed") {
-                        statusHTML = `<span class="status-badge status-failed">PAYMENT FAILED</span>`;
-                        keyHTML = `<div style="color:#ef4444; font-size:0.8rem; margin-top:5px;">Payment Failed / Rejected</div>`;
+            const mailtoUrl = `mailto:zalzalatabhi50@gmail.com?subject=Support Request from ${name}&body=Name: ${name}%0AGmail: ${gmail}%0AProblem: ${problem}`;
+            window.location.href = mailtoUrl;
+
+            closeModal('supportModal');
+            showToast("Send Successfully!");
+            document.getElementById('suppName').value = '';
+            document.getElementById('suppGmail').value = '';
+            document.getElementById('suppProblem').value = '';
+        }
+
+        function openHistoryModal() {
+            const container = document.getElementById('historyContent');
+            const myTickets = JSON.parse(localStorage.getItem('my_tickets') || '[]');
+            document.getElementById('historyModal').classList.add('active');
+
+            if(myTickets.length === 0) {
+                container.innerHTML = '<p style="color:var(--muted)">Aapne koi key nahi kharidi hai.</p>';
+                return;
+            }
+
+            container.innerHTML = 'Loading...';
+            let htmlData = '';
+
+            myTickets.forEach(id => {
+                db.ref('tickets/' + id).on('value', snapshot => {
+                    const item = snapshot.val();
+                    if(item) {
+                        htmlData += `
+                            <div class="history-card">
+                                <strong>${item.plan}</strong>
+                                <p style="font-size:0.8rem; color:var(--muted)">UTR: ${item.utr}</p>
+                                <p style="font-size:0.85rem">Status: <b style="color:${item.status === 'approved' ? '#22c55e' : '#eab308'}">${item.status.toUpperCase()}</b></p>
+                                ${item.status === 'approved' ? `<div class="key-display">Key: ${item.key}</div>` : ''}
+                            </div>
+                        `;
+                        container.innerHTML = htmlData;
                     }
-
-                    const div = document.createElement("div");
-                    div.className = "history-item";
-                    div.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong>${item.plan} (₹${item.price})</strong>
-                            ${statusHTML}
-                        </div>
-                        <div style="font-size:0.8rem; color:var(--muted); margin-top:3px;">UTR: ${item.utr}</div>
-                        ${keyHTML}
-                    `;
-                    historyList.appendChild(div);
                 });
             });
         }
-
-        function closeHistory() {
-            document.getElementById("historyModal").classList.remove("active");
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById("toast");
-            toast.textContent = msg;
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
-        }
     </script>
 </body>
-</html>
+                        </html>
+    
