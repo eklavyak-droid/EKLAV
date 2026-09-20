@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EKLAV MODZ | Admin Dashboard</title>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+        h1 { color: #a855f7; margin-bottom: 20px; text-align: center; }
+
+        .tickets-container { max-width: 900px; margin: auto; display: grid; gap: 15px; }
+        .ticket-card { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .btn { padding: 8px 16px; border: 0; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        .btn-approve { background: #22c55e; color: #000; }
+        .btn-reject { background: #ef4444; color: #fff; }
+
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+        .pending { background: #eab308; color: #000; }
+        .approved { background: #22c55e; color: #000; }
+        .failed { background: #ef4444; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <h1>EKLAV MODZ - Admin Control Panel</h1>
+    <div class="tickets-container" id="ticketList">
+        <p style="text-align: center;">Loading payment tickets...</p>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC0ImGHNOYIsN1GSwzUz9PtQrsDucm1u28",
+            databaseURL: "https://social-time-f4e53-default-rtdb.firebaseio.com",
+            projectId: "social-time-f4e53",
+            storageBucket: "social-time-f4e53.firebasestorage.app"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // KEY MAPPING AS PER USER REQUEST
+        const keyMap = {
+            "Dashboard - 1": "@EMODZ-14520ad2e",
+            "Dashboard - 2": "@EMODZ-82726ad3e",
+            "Dashboard - 3": "@EMODZ-97628ad9e",
+            "Dashboard - 4": "@EMODZ-82368ad1e",
+            "Dashboard - 5": "PREM@EMOD-92721@1"
+        };
+
+        db.ref("tickets").on("value", (snapshot) => {
+            const ticketList = document.getElementById("ticketList");
+            ticketList.innerHTML = "";
+
+            if (!snapshot.exists()) {
+                ticketList.innerHTML = "<p style='text-align:center;'>Koi payment ticket pending nahi hai.</p>";
+                return;
+            }
+
+            snapshot.forEach((child) => {
+                const ticketId = child.key;
+                const data = child.val();
+
+                const div = document.createElement("div");
+                div.className = "ticket-card";
+
+                let actions = "";
+                if (data.status === "pending") {
+                    actions = `
+                        <button class="btn btn-approve" onclick="approveTicket('${ticketId}', '${data.plan}')">Approve</button>
+                        <button class="btn btn-reject" onclick="rejectTicket('${ticketId}')">Disapprove</button>
+                    `;
+                } else {
+                    actions = `<span class="badge ${data.status}">${data.status.toUpperCase()}</span>`;
+                }
+
+                div.innerHTML = `
+                    <div style="display:flex; justify-style:space-between; align-items:center; margin-bottom:10px;">
+                        <h3>${data.plan} - ₹${data.price}</h3>
+                        <div>${actions}</div>
+                    </div>
+                    <p><strong>UTR Number:</strong> ${data.utr}</p>
+                    <p><strong>User ID:</strong> ${data.userId}</p>
+                    ${data.key ? `<p style="color:#4ade80; margin-top:5px;"><strong>Assigned Key:</strong> ${data.key}</p>` : ''}
+                `;
+                ticketList.appendChild(div);
+            });
+        });
+
+        function approveTicket(ticketId, plan) {
+            const assignedKey = keyMap[plan] || "DEFAULT-KEY-000";
+            db.ref("tickets/" + ticketId).update({
+                status: "approved",
+                key: assignedKey
+            });
+        }
+
+        function rejectTicket(ticketId) {
+            db.ref("tickets/" + ticketId).update({
+                status: "failed",
+                key: ""
+            });
+        }
+    </script>
+</body>
+</html>
