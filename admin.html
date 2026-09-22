@@ -1,76 +1,82 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EKLAV MODZ | Admin Dashboard</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <title>EKLAV MODZ - Admin Dashboard</title>
     <style>
-        body { background: #0b0714; color: #fff; font-family: sans-serif; padding: 20px; }
-        h2 { color: #a855f7; margin-bottom: 20px; }
-        .ticket-card { background: #130d24; border: 1px solid #a855f7; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .btn { padding: 8px 14px; border: 0; border-radius: 6px; cursor: pointer; font-weight: bold; margin-right: 8px; }
-        .btn-approve { background: #22c55e; color: #000; }
-        .btn-disapprove { background: #ef4444; color: #fff; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-        .pending { background: #eab308; color: #000; }
-        .approved { background: #22c55e; color: #000; }
-        .disapproved { background: #ef4444; color: #fff; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+        body { background:#0a0b10; color:#fff; padding:20px; }
+        h1 { margin-bottom:20px; color:#6b52ff; }
+        .order-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius:12px;
+            padding:18px;
+            margin-bottom:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:15px;
+        }
+        .btn-approve {
+            background:#2ed573; color:#000; font-weight:bold; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;
+        }
+        .btn-approved {
+            background:#57606f; color:#ccc; cursor:not-allowed; border:none; padding:10px 18px; border-radius:6px;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Admin Approval Dashboard</h2>
-    <div id="ticketContainer">Loading Tickets...</div>
+    <h1>EKLAV MODZ - Admin Approval Panel</h1>
+    <div id="adminOrdersList"></div>
 
     <script>
-        const firebaseConfig = { databaseURL: "https://your-firebase-db-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        const db = firebase.database();
+        function loadAdminOrders() {
+            const list = document.getElementById('adminOrdersList');
+            let orders = JSON.parse(localStorage.getItem('eklav_orders') || '[]');
+            list.innerHTML = '';
 
-        db.ref('tickets').on('value', snapshot => {
-            const container = document.getElementById('ticketContainer');
-            container.innerHTML = '';
-            const data = snapshot.val();
+            if(orders.length === 0) {
+                list.innerHTML = '<p>No pending or submitted tickets.</p>';
+                return;
+            }
 
-            if(!data) { container.innerHTML = 'Koi Order Nahi Hai.'; return; }
-
-            Object.keys(data).reverse().forEach(key => {
-                const item = data[key];
-                const card = document.createElement('div');
-                card.className = 'ticket-card';
-                card.innerHTML = `
-                    <p><strong>Name:</strong> ${item.name}</p>
-                    <p><strong>Plan:</strong> ${item.plan} (₹${item.price})</p>
-                    <p><strong>UTR:</strong> ${item.utr}</p>
-                    <p><strong>Time:</strong> ${item.time}</p>
-                    <p><strong>Status:</strong> <span class="badge ${item.status}">${item.status.toUpperCase()}</span></p>
-                    ${item.key ? `<p><strong>Key:</strong> ${item.key}</p>` : ''}
-                    <div style="margin-top:10px;">
-                        <button class="btn btn-approve" onclick="approveTicket('${item.id}')">Approve</button>
-                        <button class="btn btn-disapprove" onclick="disapproveTicket('${item.id}')">Disapprove</button>
+            orders.reverse().forEach(o => {
+                list.innerHTML += `
+                    <div class="order-card">
+                        <div>
+                            <h3>${o.plan} - (${o.price} INR)</h3>
+                            <p><strong>UTR:</strong> ${o.utr}</p>
+                            <p><strong>Key to Assign:</strong> ${o.key}</p>
+                            <p><strong>Validity:</strong> ${o.validity}</p>
+                            <small style="color:#aaa;">Date: ${o.date}</small>
+                        </div>
+                        <div>
+                            ${o.status === 'Pending' 
+                                ? `<button class="btn-approve" onclick="approveOrder(${o.id})">Approve Order</button>` 
+                                : `<button class="btn-approved" disabled>Approved ✓</button>`
+                            }
+                        </div>
                     </div>
                 `;
-                container.appendChild(card);
-            });
-        });
-
-        function approveTicket(id) {
-            const keyGen = "EKLAV-KEY-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-            db.ref('tickets/' + id).update({
-                status: 'approved',
-                key: keyGen
             });
         }
 
-        function disapproveTicket(id) {
-            db.ref('tickets/' + id).update({
-                status: 'disapproved',
-                key: 'REJECTED / INVALID UTR'
+        function approveOrder(id) {
+            let orders = JSON.parse(localStorage.getItem('eklav_orders') || '[]');
+            orders = orders.map(o => {
+                if(o.id === id) o.status = 'Approved';
+                return o;
             });
+            localStorage.setItem('eklav_orders', JSON.stringify(orders));
+            loadAdminOrders();
+            alert('Order Approved Successfully! Key sent to User Purchase History.');
         }
+
+        loadAdminOrders();
     </script>
 </body>
 </html>
-
