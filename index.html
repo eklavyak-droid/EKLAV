@@ -1,570 +1,938 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EKLAV MODZ | Premium Panel Store</title>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
+    <title>EKLAV MODZ - Official Store</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #0b0714;
-            --surface: #130d24;
-            --surface-2: #1b1233;
-            --border: rgba(168, 85, 247, 0.25);
-            --text: #f3f0ff;
-            --muted: #a799cc;
-            --purple: #a855f7;
-            --blue: #3b82f6;
-            --red: #ff3b3b;
-            --glow: 0 0 25px rgba(168, 85, 247, 0.4);
-            --radius: 18px;
-            --shadow: 0 18px 50px rgba(0,0,0,0.5);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
         body {
-            min-height: 100vh;
-            color: var(--text);
-            background: 
-                radial-gradient(circle at 10% 0%, rgba(168, 85, 247, 0.2), transparent 35%),
-                radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.2), transparent 35%),
-                var(--bg);
-            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #ffffff;
             overflow-x: hidden;
+            min-height: 100vh;
             position: relative;
         }
 
-        .bg-grid {
-            position: fixed; inset: 0; z-index: 0;
-            background-image: linear-gradient(rgba(168, 85, 247, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; pointer-events: none;
+        /* --- ANIMATED FALLING LIGHTS BACKGROUND --- */
+        #light-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        .topbar {
-            position: sticky; top: 0; z-index: 100; height: 74px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; background: rgba(11, 7, 20, 0.85);
-            border-bottom: 1px solid var(--border); backdrop-filter: blur(18px);
+        .falling-light {
+            position: absolute;
+            top: -20px;
+            width: 6px;
+            height: 6px;
+            background: #00d2ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
+            animation: fall linear infinite;
         }
 
-        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-        .brand-logo { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--purple); object-fit: cover; }
-        .brand-title { font-size: 1.2rem; font-weight: 800; color: #fff; }
-        .brand-title span { color: var(--red); }
-        .brand-subtitle { font-size: 0.75rem; color: var(--muted); }
-
-        .menu-button {
-            width: 42px; height: 42px; border: 1px solid var(--border);
-            border-radius: 12px; color: var(--text); background: var(--surface);
-            cursor: pointer; font-size: 1.25rem;
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) scale(0.3);
+                opacity: 0.1;
+            }
         }
 
-        .overlay { position: fixed; inset: 0; z-index: 200; display: none; background: rgba(0,0,0,0.8); }
-        .overlay.active { display: block; }
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(18, 18, 28, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #fff;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo-container img {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-right .btn-telegram {
+            background: linear-gradient(135deg, #6b52ff, #00d2ff);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(107, 82, 255, 0.4);
+        }
+
+        /* --- SIDEBAR MENU --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            z-index: 200;
+            backdrop-filter: blur(5px);
+        }
 
         .sidebar {
-            position: fixed; top: 0; right: -340px; z-index: 201;
-            width: min(340px, 86%); height: 100vh; padding: 26px 20px;
-            background: var(--surface); border-left: 1px solid var(--border);
-            transition: right 0.3s ease;
-            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: #12131c;
+            z-index: 201;
+            transition: 0.3s ease-in-out;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .sidebar.active { right: 0; }
 
-        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .close-button { border: 0; background: transparent; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+        .sidebar.active { left: 0; }
+        .sidebar-overlay.active { display: block; }
 
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
-            margin-top: 10px; border: 1px solid transparent; border-radius: 12px;
-            color: var(--muted); background: transparent; cursor: pointer; text-align: left; text-decoration: none;
+        .sidebar-close {
+            align-self: flex-end;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #ff4757;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-item {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
             font-size: 0.95rem;
-        }
-        .nav-link:hover { color: var(--text); background: var(--surface-2); border-color: var(--border); }
-
-        .container { position: relative; z-index: 2; width: min(1120px, 92%); margin: auto; padding-bottom: 60px; }
-
-        .hero {
-            display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 42px;
-            min-height: 440px; padding: 60px 0 40px;
-        }
-        .eyebrow {
-            display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px;
-            border: 1px solid var(--border); border-radius: 999px; color: var(--purple);
-            background: rgba(168, 85, 247, 0.1); font-size: 0.78rem; font-weight: 700;
-        }
-        .hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); margin: 15px 0; line-height: 1.1; }
-        .title-white { color: #ffffff; }
-        .title-red { color: var(--red); font-weight: 900; }
-        .hero-description { color: var(--muted); font-size: 1rem; line-height: 1.6; max-width: 540px; }
-
-        .hero-actions { display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap; }
-        .primary-button, .secondary-button {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            min-height: 48px; padding: 0 20px; border-radius: 12px; font-weight: 800;
-            cursor: pointer; text-decoration: none; transition: 0.25s ease;
-        }
-        .primary-button {
-            color: #fff; background: linear-gradient(135deg, var(--purple), var(--blue));
-            border: 0; box-shadow: var(--glow);
-        }
-        .secondary-button { color: var(--text); background: var(--surface); border: 1px solid var(--border); }
-
-        .hero-logo-card {
-            display: grid; place-items: center; min-height: 300px; border: 1px solid var(--border);
-            border-radius: 28px; background: linear-gradient(145deg, var(--surface-2), var(--surface));
-            box-shadow: var(--shadow); position: relative;
-        }
-        .big-logo { width: 180px; height: 180px; border-radius: 28px; border: 2px solid var(--purple); box-shadow: var(--glow); object-fit: cover; }
-
-        .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 15px; margin: 50px 0 20px; }
-        .section-heading h2 { font-size: 1.6rem; color: var(--purple); }
-        .section-heading p { color: var(--muted); font-size: 0.88rem; }
-
-        .download-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-        .download-card {
-            display: flex; align-items: center; justify-content: space-between; gap: 15px;
-            padding: 20px; border: 1px solid var(--border); border-radius: var(--radius);
-            background: var(--surface); transition: 0.25s ease;
-        }
-        .download-card:hover { transform: translateY(-3px); border-color: var(--purple); box-shadow: var(--glow); }
-        .download-icon {
-            width: 48px; height: 48px; border-radius: 14px;
-            border: 1px solid var(--border); object-fit: cover;
-        }
-        .download-button {
-            padding: 10px 14px; border: 0; border-radius: 10px; color: #fff;
-            background: linear-gradient(135deg, var(--purple), var(--blue)); font-weight: 800; cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .plan-card {
-            background: #ffffff !important;
-            color: #0f172a !important;
-            border-radius: var(--radius); padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.3s ease;
-            position: relative; display: flex; flex-direction: column;
-        }
-        .plan-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(168, 85, 247, 0.3); }
-
-        .plan-number { color: var(--purple); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; }
-        .plan-card h3 { font-size: 1.4rem; margin: 5px 0; color: #020617; }
-        .price { font-size: 2rem; font-weight: 900; color: #0f172a; margin: 15px 0; }
-        .price small { font-size: 0.85rem; color: #64748b; font-weight: 500; }
-
-        .plan-features { margin-bottom: 20px; color: #475569; font-size: 0.9rem; }
-        .plan-features div { margin-bottom: 8px; }
-        .plan-features div::before { content: "✓ "; color: #16a34a; font-weight: bold; }
-
-        .buy-button {
-            width: 100%; padding: 13px; border: 0; border-radius: 12px;
-            color: #fff; background: linear-gradient(135deg, var(--purple), var(--blue));
-            font-weight: 800; cursor: pointer; transition: 0.2s ease; margin-top: auto;
+        .sidebar-item:hover {
+            background: linear-gradient(90deg, rgba(107, 82, 255, 0.3), transparent);
+            border-color: #6b52ff;
         }
 
-        footer { padding: 30px 5%; border-top: 1px solid var(--border); color: var(--muted); text-align: center; font-size: 0.85rem; margin-top: 40px; }
-
-        .modal {
-            position: fixed; inset: 0; z-index: 300; display: none; place-items: center;
-            padding: 18px; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-        }
-        .modal.active { display: grid; }
-
-        .modal-content {
-            width: min(420px, 100%); padding: 25px; border-radius: 22px;
-            background: var(--surface); border: 1px solid var(--border); text-align: center;
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .modal-close { position: absolute; top: 15px; right: 15px; border: 0; background: transparent; color: var(--muted); font-size: 1.4rem; cursor: pointer; }
-
-        .qr-box { display: inline-block; margin: 15px 0; padding: 10px; background: white; border-radius: 12px; }
-        .qr-box img { width: 160px; height: 160px; display: block; }
-
-        .custom-input {
-            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px;
-            border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; text-align: left;
+        /* --- HERO SECTION --- */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 30px 20px 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        .toast {
-            position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
-            padding: 12px 20px; border-radius: 10px; background: #22c55e;
-            color: #fff; font-weight: 700; z-index: 500; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        .hero-big-logo {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6b52ff;
+            box-shadow: 0 0 25px rgba(107, 82, 255, 0.6);
+            margin-bottom: 15px;
         }
-        .toast.show { display: block; }
 
-        .feedback-card { background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-bottom: 10px; text-align: left; }
-        .history-card { background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-bottom: 10px; text-align: left; }
-        .key-display { background: #000; color: #4ade80; padding: 6px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; margin-top: 5px; word-break: break-all; }
+        .hero-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .blue-tick {
+            color: #1da1f2;
+            font-size: 1.3rem;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px #1da1f2); }
+            50% { transform: scale(1.2); filter: drop-shadow(0 0 8px #1da1f2); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 2px #1da1f2); }
+        }
+
+        .typing-container {
+            font-size: 1.05rem;
+            color: #00d2ff;
+            min-height: 25px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .social-icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .social-icon-btn:hover {
+            transform: translateY(-3px);
+            background: #6b52ff;
+        }
+
+                /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 25px 0 15px;
+            letter-spacing: 0.5px;
+        }
+
+        /* SEARCH BAR */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        /* CATEGORY RECTANGULAR BUTTONS */
+        .category-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            scrollbar-width: none;
+        }
+
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-btn {
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ddd;
+            white-space: nowrap;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: linear-gradient(135deg, #6b52ff, #00d2ff);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(107, 82, 255, 0.4);
+        }
+
+        /* TRANSPARENT DASHBOARD CARD */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .download-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .download-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-item-left img {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+        }
+
+        .dl-link-btn {
+            background: rgba(107, 82, 255, 0.2);
+            color: #00d2ff;
+            border: 1px solid #6b52ff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .dl-link-btn:hover {
+            background: #6b52ff;
+            color: white;
+        }
+
+        .btn-purchase-key {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-purchase-key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.6);
+            }
+                /* --- MODAL WINDOWS & PAGES --- */
+        .modal-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0c10;
+            z-index: 300;
+            display: none;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-page.active { display: block; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-close-btn {
+            font-size: 1.5rem;
+            color: #ff4757;
+            cursor: pointer;
+        }
+
+        /* KEY STORE DASHBOARDS */
+        .key-cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .key-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .key-card-title {
+            font-size: 1.1rem;
+            color: #6b52ff;
+            font-weight: 700;
+        }
+
+        .key-info {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .key-info span {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-buy-now {
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* PAYMENT FORM MODAL */
+        .payment-modal-box {
+            max-width: 400px;
+            margin: 40px auto;
+            background: #141522;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 12px;
+            display: inline-block;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .qr-container img {
+            width: 160px;
+            height: 160px;
+        }
+
+        .upi-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            word-break: break-all;
+        }
+
+        .btn-direct-pay {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .utr-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .btn-submit-ticket {
+            width: 100%;
+            padding: 12px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* POPUP */
+        .popup-msg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid #6b52ff;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: none;
+            z-index: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        /* PURCHASE HISTORY TABLE */
+        .history-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #eccc68; color: #000; }
+        .status-approved { background: #2ed573; color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
+    <!-- Falling Lights Container -->
+    <div id="light-container"></div>
 
-    <!-- HEADER -->
-    <header class="topbar">
-        <a href="#home" class="brand">
-            <img src="logo.png" class="brand-logo" alt="Logo">
-            <div>
-                <div class="brand-title">EKLAV <span>MODZ</span></div>
-                <div class="brand-subtitle">Premium gaming tools</div>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></div>
+            <div class="brand-logo-container">
+                <img src="logo.png" alt="Logo">
+                <div class="brand-title">EKLAV MODZ</div>
             </div>
-        </a>
-        <button class="menu-button" onclick="openSidebar()">☰</button>
+        </div>
+        <div class="header-right">
+            <a href="https://t.me/joinyu1" target="_blank" class="btn-telegram">
+                <i class="fa-brands fa-telegram"></i> Join Telegram
+            </a>
+        </div>
     </header>
 
-    <!-- SIDEBAR -->
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu Navigation</h3>
-            <button class="close-button" onclick="closeSidebar()">×</button>
-        </div>
-        <nav>
-            <a href="#home" class="nav-link" onclick="closeSidebar()">⌂ Homepage</a>
-            <a href="#plans" class="nav-link" onclick="closeSidebar()">▣ Available Plans</a>
-            <button class="nav-link" onclick="openHistoryModal(); closeSidebar();">◷ Purchase History</button>
-            <button class="nav-link" onclick="openFeedbackModal(); closeSidebar();">★ Check Feedback</button>
-            <button class="nav-link" onclick="showToast('Free Panel Uploading Soon!')">🎁 Free Panel</button>
-            <button class="nav-link" onclick="openSupportModal(); closeSidebar();">🎧 Customer Support</button>
-        </nav>
-    </aside>
-
-    <!-- MAIN CONTAINER -->
-    <main class="container" id="home">
-        <!-- HERO SECTION -->
-        <section class="hero">
-            <div>
-                <div class="eyebrow">SYSTEM ONLINE</div>
-                <h1>YOUR <span class="title-white">EKLAV</span> <span class="title-red">MODZ</span> Store</h1>
-                <p class="hero-description">
-                    Fast, secure aur reliable gaming panels. Plan choose karein, UPI payment karein aur UTR submit karke Instant key prapt karein.
-                </p>
-                <div class="hero-actions">
-                    <a href="#plans" class="primary-button">View Key Plans →</a>
-                    <a href="#downloads" class="secondary-button">Download APK</a>
-                </div>
-            </div>
-            <div class="hero-logo-card">
-                <img src="logo.png" class="big-logo" alt="Eklav Logo">
-            </div>
-        </section>
-
-        <!-- DOWNLOADS -->
-        <section id="downloads">
-            <div class="section-heading">
-                <div>
-                    <h2>Official Downloads</h2>
-                    <p>Latest files keval official source se download karein.</p>
-                </div>
-            </div>
-            <div class="download-grid">
-                <!-- Panel APK -->
-                <div class="download-card">
-                    <img src="logo.png" class="download-icon" alt="Panel Logo">
-                    <div>
-                        <h3>Panel APK</h3>
-                        <p style="font-size:0.8rem; color:var(--muted);">All Android support</p>
-                    </div>
-                    <button class="download-button" onclick="showToast('Panel APK Download Soon')">Download</button>
-                </div>
-                <!-- Free Fire APK -->
-                <div class="download-card">
-                    <img src="logo_1.png" class="download-icon" alt="FF Logo">
-                    <div>
-                        <h3>FF APK</h3>
-                        <p style="font-size:0.8rem; color:var(--muted);">Latest Build · Android 10+</p>
-                    </div>
-                    <button class="download-button" onclick="showToast('FF APK Download Soon')">Download</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- PLANS -->
-        <section id="plans">
-            <div class="section-heading">
-                <div>
-                    <h2>Select Dashboard Key</h2>
-                    <p>Instant submit · Manual verification system</p>
-                </div>
-            </div>
-
-            <div class="plans-grid">
-                <article class="plan-card">
-                    <div class="plan-number">Plan 01</div>
-                    <h3>Dashboard - 1</h3>
-                    <div class="price">₹110 <small>/ 14 Hours</small></div>
-                    <div class="plan-features">
-                        <div>14 Hours Access</div>
-                        <div>EKLAV MODZ System</div>
-                        <div>Manual Approval Support</div>
-                    </div>
-                    <button class="buy-button" onclick="openPayment('Dashboard - 1', 110)">Buy Now</button>
-                </article>
-
-                <article class="plan-card">
-                    <div class="plan-number">Plan 02</div>
-                    <h3>Dashboard - 2</h3>
-                    <div class="price">₹250 <small>/ 42 Hours</small></div>
-                    <div class="plan-features">
-                        <div>42 Hours Access</div>
-                        <div>EKLAV MODZ System</div>
-                        <div>Manual Approval Support</div>
-                    </div>
-                    <button class="buy-button" onclick="openPayment('Dashboard - 2', 250)">Buy Now</button>
-                </article>
-
-                <article class="plan-card">
-                    <div class="plan-number">Plan 03</div>
-                    <h3>Dashboard - 3</h3>
-                    <div class="price">₹330 <small>/ 60 Hours</small></div>
-                    <div class="plan-features">
-                        <div>60 Hours Access</div>
-                        <div>EKLAV MODZ System</div>
-                        <div>Priority Approval Support</div>
-                    </div>
-                    <button class="buy-button" onclick="openPayment('Dashboard - 3', 330)">Buy Now</button>
-                </article>
-
-                <article class="plan-card">
-                    <div class="plan-number">Plan 04</div>
-                    <h3>Dashboard - 4</h3>
-                    <div class="price">₹450 <small>/ 80 Hours</small></div>
-                    <div class="plan-features">
-                        <div>80 Hours Access</div>
-                        <div>EKLAV MODZ System</div>
-                        <div>Manual Approval Support</div>
-                    </div>
-                    <button class="buy-button" onclick="openPayment('Dashboard - 4', 450)">Buy Now</button>
-                </article>
-
-                <article class="plan-card">
-                    <div class="plan-number">Plan 05</div>
-                    <h3>Dashboard - 5</h3>
-                    <div class="price">₹510 <small>/ 100 Hours</small></div>
-                    <div class="plan-features">
-                        <div>100 Hours Access</div>
-                        <div>EKLAV MODZ System</div>
-                        <div>VIP Priority Support</div>
-                    </div>
-                    <button class="buy-button" onclick="openPayment('Dashboard - 5', 510)">Buy Now</button>
-                </article>
-            </div>
-        </section>
-    </main>
-
-    <!-- BUY MODAL -->
-    <div class="modal" id="payModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('payModal')">×</button>
-            <h3 id="modalPlanName">Checkout Plan</h3>
-            <p id="modalPlanPrice" style="color:var(--purple); font-weight:bold; margin-bottom:10px;"></p>
-
-            <input type="text" id="custName" class="custom-input" placeholder="Enter Your Name">
-            <select id="custPlan" class="custom-input" disabled>
-                <option value="">Choose Plan</option>
-            </select>
-
-            <div class="qr-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=zalzalatabhi50@upi&pn=EklavModz" alt="Payment QR">
-            </div>
-
-            <a href="upi://pay?pa=zalzalatabhi50@upi&pn=EklavModz" class="primary-button" style="width:100%; margin-bottom:10px;">Direct Payment Now</a>
-
-            <input type="text" id="custUTR" class="custom-input" placeholder="Enter 12 Digit UTR Number">
-            <button class="buy-button" onclick="submitTicket()">Submit Ticket</button>
-        </div>
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-close" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></div>
+        <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-solid fa-house"></i> Homepage</div>
+        <div class="sidebar-item" onclick="openPurchaseHistory()"><i class="fa-solid fa-clock-rotate-left"></i> Purchase History</div>
+        <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-brands fa-android"></i> Android Panel</div>
+        <div class="sidebar-item" onclick="showMaintenancePopup()"><i class="fa-brands fa-apple"></i> Ios Panel</div>
+        <div class="sidebar-item" onclick="showMaintenancePopup()"><i class="fa-solid fa-desktop"></i> Pc Panel</div>
+        <div class="sidebar-item" onclick="openPurchaseHistory()"><i class="fa-solid fa-key"></i> Your Subscription</div>
+        <div class="sidebar-item" onclick="window.open('https://t.me/joinyu1', '_blank')"><i class="fa-solid fa-headset"></i> Customer support</div>
     </div>
 
-    <!-- CUSTOMER SUPPORT MODAL -->
-    <div class="modal" id="supportModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('supportModal')">×</button>
-            <h3>Customer Support</h3>
-            <p style="font-size:0.8rem; color:var(--muted); margin-bottom:15px;">Send issue directly to Admin</p>
-
-            <input type="text" id="suppName" class="custom-input" placeholder="Enter Name">
-            <input type="email" id="suppGmail" class="custom-input" placeholder="Enter Your Gmail">
-            <textarea id="suppProblem" class="custom-input" style="height:80px;" placeholder="Enter Your Problem"></textarea>
-
-            <button class="buy-button" style="margin-top:10px;" onclick="sendSupport()">Send Ticket</button>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <img src="logo.png" alt="Big Logo" class="hero-big-logo">
+        <div class="hero-title">
+            Hii, i am EKLAV MODZ <i class="fa-solid fa-circle-check blue-tick"></i>
+        </div>
+        <div class="typing-container" id="typingText"></div>
+        <div class="social-buttons">
+            <a href="https://t.me/joinyu1" target="_blank" class="social-icon-btn"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://t.me/joinyu1" target="_blank" class="social-icon-btn"><i class="fa-solid fa-headset"></i></a>
         </div>
     </div>
+        <!-- Main Content -->
+    <div class="container">
+        <div class="section-header">Our Product !!</div>
 
-    <!-- PURCHASE HISTORY MODAL -->
-    <div class="modal" id="historyModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('historyModal')">×</button>
-            <h3>Purchase History</h3>
-            <div id="historyContent" style="margin-top:15px;">Loading...</div>
+        <!-- Search Bar -->
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search panel or product...">
         </div>
-    </div>
 
-    <!-- FEEDBACK MODAL -->
-    <div class="modal" id="feedbackModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('feedbackModal')">×</button>
-            <h3>Customer Feedbacks</h3>
-            <div style="margin-top:15px;">
-                <div class="feedback-card">
-                    <strong>★ ★ ★ ★ ★ - Rohit S.</strong>
-                    <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">"Instant key mil gayi 2 minute me! Safe and legit system."</p>
+        <!-- Category Rectangular Buttons -->
+        <div class="category-scroll">
+            <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
+            <button class="cat-btn" onclick="filterCategory('android', this)">Android Panel</button>
+            <button class="cat-btn" onclick="showMaintenancePopup()">iOS Panel</button>
+            <button class="cat-btn" onclick="showMaintenancePopup()">Headshot Files</button>
+            <button class="cat-btn" onclick="showMaintenancePopup()">PC Panel</button>
+            <button class="cat-btn" onclick="showMaintenancePopup()">Source Codes</button>
+        </div>
+
+        <!-- Dashboard Products Container -->
+        <div id="productsContainer">
+            <div class="glass-card product-item" data-name="android non root panel">
+                <img src="logo_2.png" alt="Banner" class="banner-img">
+                <div class="card-title">ANDROID NON ROOT PANEL</div>
+                
+                <div class="download-list">
+                    <div class="download-item">
+                        <div class="download-item-left">
+                            <img src="logo.png" alt="Icon">
+                            <span>VPN Loader</span>
+                        </div>
+                        <a href="https://www.mediafire.com/file/5ps8iqp4jmfyw9e/VPN+Loader.apk/file" target="_blank" class="dl-link-btn">[Download]</a>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-item-left">
+                            <img src="logo_1.png" alt="Icon">
+                            <span>Mode apk</span>
+                        </div>
+                        <a href="https://t.me/joinyu1" target="_blank" class="dl-link-btn">[Download]</a>
+                    </div>
                 </div>
-                <div class="feedback-card">
-                    <strong>★ ★ ★ ★ ★ - Aman V.</strong>
-                    <p style="font-size:0.85rem; color:var(--muted); margin-top:4px;">"Best Free Fire Panel Ever!"</p>
-                </div>
+
+                <button class="btn-purchase-key" onclick="openKeyStorePage()">Purchase Key</button>
             </div>
         </div>
     </div>
 
-    <div class="toast" id="toastMsg"></div>
+    <!-- Purchase Key Store Modal Page -->
+    <div class="modal-page" id="keyStorePage">
+        <div class="modal-header">
+            <h2>Select Key Plan</h2>
+            <div class="modal-close-btn" onclick="closeKeyStorePage()"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="key-cards-grid">
+            <!-- Dashboard 1 -->
+            <div class="key-card">
+                <div class="key-card-title">EKLAV MODZ</div>
+                <div class="key-info">Validity: <span>14 Hr</span></div>
+                <div class="key-info">Price: <span>99 INR</span></div>
+                <button class="btn-buy-now" onclick="openPaymentModal('Dashboard 1 (14 Hr)', '99', 'ade110eklav@14', '14 hours')">Buy Now</button>
+            </div>
+            <!-- Dashboard 2 -->
+            <div class="key-card">
+                <div class="key-card-title">EKLAV MODZ</div>
+                <div class="key-info">Validity: <span>42 Hr</span></div>
+                <div class="key-info">Price: <span>210 INR</span></div>
+                <button class="btn-buy-now" onclick="openPaymentModal('Dashboard 2 (42 Hr)', '210', 'sdkq250eklav@42', '42 hours')">Buy Now</button>
+            </div>
+            <!-- Dashboard 3 -->
+            <div class="key-card">
+                <div class="key-card-title">EKLAV MODZ</div>
+                <div class="key-info">Validity: <span>60 Hr</span></div>
+                <div class="key-info">Price: <span>330 INR</span></div>
+                <button class="btn-buy-now" onclick="openPaymentModal('Dashboard 3 (60 Hr)', '330', '82925719', '60 hours')">Buy Now</button>
+            </div>
+            <!-- Dashboard 4 -->
+            <div class="key-card">
+                <div class="key-card-title">EKLAV MODZ</div>
+                <div class="key-info">Validity: <span>80 Hr</span></div>
+                <div class="key-info">Price: <span>450 INR</span></div>
+                <button class="btn-buy-now" onclick="openPaymentModal('Dashboard 4 (80 Hr)', '450', '19276392', '80 hours')">Buy Now</button>
+            </div>
+            <!-- Dashboard 5 -->
+            <div class="key-card">
+                <div class="key-card-title">EKLAV MODZ</div>
+                <div class="key-info">Key: <span>283747337</span></div>
+                <div class="key-info">Validity: <span>100 Hr</span></div>
+                <div class="key-info">Price: <span>510 INR</span></div>
+                <button class="btn-buy-now" onclick="openPaymentModal('Dashboard 5 (100 Hr)', '510', '283747337', '100 hours')">Buy Now</button>
+            </div>
+        </div>
+    </div>
 
-    <footer>
-        © 2026 EKLAV MODZ. All rights reserved.
-    </footer>
+    <!-- Payment Modal -->
+    <div class="modal-page" id="paymentModal">
+        <div class="payment-modal-box">
+            <div class="modal-close-btn" style="text-align: right;" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="payPlanName" style="color: #00d2ff; margin-bottom: 5px;">Selected Plan</h3>
+            <p id="payPlanPrice" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;"></p>
+            
+            <div class="qr-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=eklavyna@naviaxis" alt="Payment QR">
+            </div>
+            <div class="upi-box">UPI ID: eklavyna@naviaxis</div>
+            
+            <a href="#" id="directPayBtn" class="btn-direct-pay">Direct Payment</a>
+            
+            <input type="text" id="utrNumberInput" class="utr-input" placeholder="Enter UTR / Reference Number">
+            <button class="btn-submit-ticket" onclick="submitTicket()">Submit Ticket</button>
+        </div>
+    </div>
 
+    <!-- Purchase History Modal Page -->
+    <div class="modal-page" id="historyPage">
+        <div class="modal-header">
+            <h2>Purchase History</h2>
+            <div class="modal-close-btn" onclick="closeHistoryPage()"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div id="historyList" style="max-width: 500px; margin: 0 auto;">
+            <!-- Dynamic JS Items -->
+        </div>
+    </div>
+
+    <!-- Universal Popup -->
+    <div class="popup-msg" id="universalPopup">
+        <p id="popupText">Wait for approval</p>
+    </div>
+
+    <!-- JavaScript Logic -->
     <script>
-        // Firebase Config (Apna Database URL Dalein)
-        const firebaseConfig = {
-            databaseURL: "https://your-firebase-db-default-rtdb.firebaseio.com/"
-        };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        const db = firebase.database();
-
-        let selectedPlan = "";
-        let selectedPrice = 0;
-
-        function openSidebar() {
-            document.getElementById('sidebar').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
+        // Generating Animated Falling Lights
+        const lightContainer = document.getElementById('light-container');
+        for (let i = 0; i < 35; i++) {
+            let light = document.createElement('div');
+            light.className = 'falling-light';
+            light.style.left = Math.random() * 100 + 'vw';
+            light.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            light.style.animationDelay = Math.random() * 5 + 's';
+            lightContainer.appendChild(light);
         }
 
-        function openPayment(planName, price) {
-            selectedPlan = planName;
-            selectedPrice = price;
-            document.getElementById('modalPlanName').innerText = planName;
-            document.getElementById('modalPlanPrice').innerText = '₹' + price;
-            
-            const sel = document.getElementById('custPlan');
-            sel.innerHTML = `<option value="${planName}">${planName} - ₹${price}</option>`;
-            
-            document.getElementById('payModal').classList.add('active');
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        function openSupportModal() { document.getElementById('supportModal').classList.add('active'); }
-        function openFeedbackModal() { document.getElementById('feedbackModal').classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        // Typing Effect "Welcome To My Store Purchase Now" Loop
+        const typingText = document.getElementById('typingText');
+        const textToType = 'Welcome To My Store "Purchase Now"';
+        let charIndex = 0;
+        let isDeleting = false;
 
-        function showToast(msg) {
-            const toast = document.getElementById('toastMsg');
-            toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        function typeLoop() {
+            if (!isDeleting && charIndex <= textToType.length) {
+                typingText.innerHTML = textToType.substring(0, charIndex);
+                charIndex++;
+            } else if (isDeleting && charIndex >= 0) {
+                typingText.innerHTML = textToType.substring(0, charIndex);
+                charIndex--;
+            }
+
+            if (charIndex === textToType.length + 1) {
+                isDeleting = true;
+                setTimeout(typeLoop, 1500);
+            } else if (charIndex === 0 && isDeleting) {
+                isDeleting = false;
+                setTimeout(typeLoop, 500);
+            } else {
+                setTimeout(typeLoop, isDeleting ? 40 : 80);
+            }
+        }
+        typeLoop();
+
+        // Maintenance Popup
+        function showMaintenancePopup() {
+            showPopup('Keep Maintenance Mode!');
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+        }
+
+        function showPopup(text) {
+            const popup = document.getElementById('universalPopup');
+            document.getElementById('popupText').innerText = text;
+            popup.style.display = 'block';
+            setTimeout(() => { popup.style.display = 'none'; }, 2500);
+        }
+
+        // Key Store & Payment Logic
+        let selectedPlan = {};
+
+        function openKeyStorePage() { document.getElementById('keyStorePage').classList.add('active'); }
+        function closeKeyStorePage() { document.getElementById('keyStorePage').classList.remove('active'); }
+
+        function openPaymentModal(planName, price, key, validity) {
+            selectedPlan = { planName, price, key, validity };
+            document.getElementById('payPlanName').innerText = planName;
+            document.getElementById('payPlanPrice').innerText = 'Price: ' + price + ' INR';
+            document.getElementById('directPayBtn').href = `upi://pay?pa=eklavyna@naviaxis&pn=Eklav%20Modz&am=${price}&cu=INR`;
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.getElementById('utrNumberInput').value = '';
         }
 
         function submitTicket() {
-            const name = document.getElementById('custName').value.trim();
-            const utr = document.getElementById('custUTR').value.trim();
-
-            if(!name || !utr) {
-                alert("Kripya Naam aur UTR Number bharein!");
+            const utr = document.getElementById('utrNumberInput').value.trim();
+            if(!utr) {
+                alert('Please Enter UTR Number!');
                 return;
             }
 
-            const ticketId = 'TCK' + Date.now();
-            const ticketData = {
-                id: ticketId,
-                name: name,
-                plan: selectedPlan,
-                price: selectedPrice,
+            // Save to LocalStorage for Admin Panel
+            let orders = JSON.parse(localStorage.getItem('eklav_orders') || '[]');
+            const newOrder = {
+                id: Date.now(),
+                plan: selectedPlan.planName,
+                price: selectedPlan.price,
+                key: selectedPlan.key,
+                validity: selectedPlan.validity,
                 utr: utr,
-                status: 'pending',
-                time: new Date().toLocaleString(),
-                key: 'Processing...'
+                status: 'Pending',
+                date: new Date().toLocaleString()
             };
+            orders.push(newOrder);
+            localStorage.setItem('eklav_orders', JSON.stringify(orders));
 
-            db.ref('tickets/' + ticketId).set(ticketData).then(() => {
-                let myTickets = JSON.parse(localStorage.getItem('my_tickets') || '[]');
-                myTickets.push(ticketId);
-                localStorage.setItem('my_tickets', JSON.stringify(myTickets));
-
-                closeModal('payModal');
-                showToast("Send Successfully!");
-                document.getElementById('custName').value = '';
-                document.getElementById('custUTR').value = '';
-            });
+            closePaymentModal();
+            closeKeyStorePage();
+            showPopup('Wait for approval');
         }
 
-        function sendSupport() {
-            const name = document.getElementById('suppName').value.trim();
-            const gmail = document.getElementById('suppGmail').value.trim();
-            const problem = document.getElementById('suppProblem').value.trim();
-
-            if(!name || !gmail || !problem) {
-                alert("Sabhi Details Bharein!");
-                return;
-            }
-
-            db.ref('support_tickets/').push({
-                name: name,
-                gmail: gmail,
-                problem: problem,
-                time: new Date().toLocaleString()
-            });
-
-            const mailtoUrl = `mailto:zalzalatabhi50@gmail.com?subject=Support Request from ${name}&body=Name: ${name}%0AGmail: ${gmail}%0AProblem: ${problem}`;
-            window.location.href = mailtoUrl;
-
-            closeModal('supportModal');
-            showToast("Send Successfully!");
-            document.getElementById('suppName').value = '';
-            document.getElementById('suppGmail').value = '';
-            document.getElementById('suppProblem').value = '';
-        }
-
-        function openHistoryModal() {
-            const container = document.getElementById('historyContent');
-            const myTickets = JSON.parse(localStorage.getItem('my_tickets') || '[]');
-            document.getElementById('historyModal').classList.add('active');
-
-            if(myTickets.length === 0) {
-                container.innerHTML = '<p style="color:var(--muted)">Aapne koi key nahi kharidi hai.</p>';
-                return;
-            }
-
-            container.innerHTML = 'Loading...';
-            let htmlData = '';
-
-            myTickets.forEach(id => {
-                db.ref('tickets/' + id).on('value', snapshot => {
-                    const item = snapshot.val();
-                    if(item) {
-                        htmlData += `
-                            <div class="history-card">
-                                <strong>${item.plan}</strong>
-                                <p style="font-size:0.8rem; color:var(--muted)">UTR: ${item.utr}</p>
-                                <p style="font-size:0.85rem">Status: <b style="color:${item.status === 'approved' ? '#22c55e' : '#eab308'}">${item.status.toUpperCase()}</b></p>
-                                ${item.status === 'approved' ? `<div class="key-display">Key: ${item.key}</div>` : ''}
+        // Purchase History Page
+        function openPurchaseHistory() {
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+            const historyList = document.getElementById('historyList');
+            let orders = JSON.parse(localStorage.getItem('eklav_orders') || '[]');
+            
+            historyList.innerHTML = '';
+            if(orders.length === 0) {
+                historyList.innerHTML = '<p style="text-align:center; color:#888;">No Purchase History Found.</p>';
+            } else {
+                orders.reverse().forEach(o => {
+                    historyList.innerHTML += `
+                        <div class="history-card">
+                            <div style="display:flex; justify-shadow:space-between; justify-content:space-between; margin-bottom:8px;">
+                                <strong>${o.plan}</strong>
+                                <span class="status-badge ${o.status === 'Approved' ? 'status-approved' : 'status-pending'}">${o.status}</span>
                             </div>
-                        `;
-                        container.innerHTML = htmlData;
-                    }
+                            <div style="font-size:0.85rem; color:#aaa;">Price: ${o.price} INR | UTR: ${o.utr}</div>
+                            <div style="margin-top:8px; font-size:0.95rem; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; color:#00d2ff;">
+                                <strong>Key:</strong> ${o.status === 'Approved' ? o.key : 'Hidden (Waiting Approval)'}<br>
+                                <strong>Validity:</strong> ${o.validity}
+                            </div>
+                        </div>
+                    `;
                 });
-            });
+            }
+            document.getElementById('historyPage').classList.add('active');
+        }
+
+        function closeHistoryPage() { document.getElementById('historyPage').classList.remove('active'); }
+
+        // Filter Products Search
+        function filterProducts() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let items = document.getElementsByClassName('product-item');
+            for (let item of items) {
+                let name = item.getAttribute('data-name');
+                if (name.includes(input)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            }
         }
     </script>
 </body>
-                        </html>
+                </html>
     
